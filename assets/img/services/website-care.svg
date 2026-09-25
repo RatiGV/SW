@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 400"><defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1c1a2e"/><stop offset="1" stop-color="#0e0e14"/></linearGradient>
+<radialGradient id="g1" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#7b5cff" stop-opacity=".9"/><stop offset="1" stop-color="#7b5cff" stop-opacity="0"/></radialGradient>
+<radialGradient id="g2" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ff5ca8" stop-opacity=".8"/><stop offset="1" stop-color="#ff5ca8" stop-opacity="0"/></radialGradient>
+<radialGradient id="g3" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#c8ff3d" stop-opacity=".55"/><stop offset="1" stop-color="#c8ff3d" stop-opacity="0"/></radialGradient>
+<linearGradient id="lv" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7b5cff"/><stop offset="1" stop-color="#ff5ca8"/></linearGradient>
+<pattern id="grid" width="25" height="25" patternUnits="userSpaceOnUse"><path d="M25 0H0V25" fill="none" stroke="#fff" stroke-opacity=".05"/></pattern>
+</defs><rect width="500" height="400" fill="url(#bg)"/><rect width="500" height="400" fill="url(#grid)"/><circle cx="250" cy="180" r="190" fill="url(#g1)"/><circle cx="70" cy="60" r="120" fill="url(#g2)"/><rect x="40" y="250" width="420" height="110" rx="18" fill="#15141d" stroke="#ffffff" stroke-opacity=".12"/>
+<path d="M60 320h40l12-30 16 55 14-40 10 15h40l12-25 14 40 12-15h60l12-30 16 55 14-40 10 15h100" fill="none" stroke="#c8ff3d" stroke-width="3" stroke-linejoin="round"/>
+<rect x="60" y="268" width="90" height="10" rx="5.0" fill="#fff" fill-opacity="0.35"/><text x="440" y="280" text-anchor="end" font-family="Arial, sans-serif" font-weight="800" font-size="18" fill="#c8ff3d">99.9%</text>
+<path d="M250 40l90 32v70c0 60-40 95-90 112-50-17-90-52-90-112V72z" fill="url(#lv)"/>
+<path d="M250 58l72 26v58c0 48-32 77-72 92z" fill="#fff" fill-opacity=".12"/>
+<path d="M212 150l26 26 50-54" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+<g transform="translate(55 70)"><rect width="100" height="120" rx="14" fill="#15141d" stroke="#ffffff" stroke-opacity=".12"/><rect x="14" y="18" width="50" height="8" rx="4.0" fill="#fff" fill-opacity="0.4"/><rect x="24" y="36" width="60" height="8" rx="4.0" fill="#fff" fill-opacity="0.2"/><rect x="24" y="54" width="40" height="8" rx="4.0" fill="#fff" fill-opacity="0.2"/><rect x="14" y="72" width="56" height="8" rx="4.0" fill="#fff" fill-opacity="0.4"/><rect x="24" y="90" width="48" height="8" rx="4.0" fill="#fff" fill-opacity="0.2"/></g>
+<g transform="translate(360 120)"><circle r="36" fill="#15141d" stroke="#fff" stroke-opacity=".15"/><path d="M-14 0a14 14 0 1 1 4 10" fill="none" stroke="#c8ff3d" stroke-width="5" stroke-linecap="round"/><path d="M-20 4l6 8 8-6" fill="none" stroke="#c8ff3d" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g></svg>

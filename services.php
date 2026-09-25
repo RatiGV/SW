@@ -3,24 +3,6 @@ require_once __DIR__ . '/config.php';
 $page = 'services';
 $metaTitle = $t['srv_meta_title'];
 $metaDesc = $t['srv_meta_desc'];
-$portfolio = require __DIR__ . '/data/portfolio.php';
-$showcase = [
-    'web-design' => ['websites', 'meinl'],
-    'app-development' => ['websites', 'players'],
-    'branding' => ['branding', 'avocado'],
-    'social-media' => ['facebook', 'sorelle'],
-    'photo-video' => ['websites', 'mercedes'],
-    'seo' => ['websites', 'ocg'],
-    'website-care' => ['websites', 'hyundai'],
-];
-$findImg = function ($cat, $slug) use ($portfolio) {
-    foreach ($portfolio as $p) {
-        if ($p['cat'] === $cat && basename($p['img'], '.webp') === $slug) {
-            return $p;
-        }
-    }
-    return null;
-};
 $heroLabel = $t['srv_label'];
 $heroTitle = $t['srv_title'];
 $heroSub = $t['srv_sub'];
@@ -38,13 +20,10 @@ require __DIR__ . '/partials/header.php';
     <section class="srv-list">
         <div class="wrap">
             <?php foreach ($t['services'] as $i => $s): ?>
-            <?php $img = $findImg(...$showcase[$s['slug']]); ?>
             <article class="srv" id="<?= e($s['slug']) ?>">
                 <div class="srv-media reveal">
                     <span class="srv-num" aria-hidden="true"><?= sprintf('%02d', $i + 1) ?></span>
-                    <?php if ($img): ?>
-                    <img src="<?= e(asset($img['img'])) ?>" alt="<?= e($img['t']) ?>" loading="lazy">
-                    <?php endif; ?>
+                    <img src="<?= e(asset('assets/img/services/' . $s['slug'] . '.svg')) ?>" alt="" loading="lazy" width="500" height="400">
                 </div>
                 <div class="srv-content">
                     <h2 class="srv-title reveal"><?= e($s['t']) ?></h2>
