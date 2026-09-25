@@ -1,0 +1,30 @@
+Options -Indexes -MultiViews
+RewriteEngine On
+# Old smartweb.ge URLs -> new pages
+RewriteRule ^price/?$ /pricing [R=301,L]
+RewriteRule ^portfolio/$ /portfolio [R=301,L]
+RewriteRule ^contact/$ /contact [R=301,L]
+RewriteRule ^(web-design|app-development)/?$ /services#$1 [R=301,NE,L]
+RewriteRule ^(logo-design|branding)/?$ /services#branding [R=301,NE,L]
+RewriteRule ^(photography|video-production)/?$ /services#photo-video [R=301,NE,L]
+RewriteRule ^(adwords|seo-.*)/?$ /services#seo [R=301,NE,L]
+RewriteRule ^site-administration/?$ /services#website-care [R=301,NE,L]
+RewriteRule ^facebook-.*$ /services#social-media [R=301,NE,L]
+# Clean URLs
+RewriteRule ^(services|portfolio|pricing|contact)/?$ $1.php [L,QSA]
+# Hide raw .php URLs for pages
+RewriteCond %{THE_REQUEST} \s/(services|portfolio|pricing|contact)\.php[\s?] [NC]
+RewriteRule ^ /%1 [R=301,L]
+ErrorDocument 404 /404.php
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css application/javascript image/svg+xml
+</IfModule>
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+</IfModule>
+<FilesMatch "^(config|router)\.php$">
+    Require all denied
+</FilesMatch>

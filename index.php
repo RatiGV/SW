@@ -1,7 +1,10 @@
 <?php
-require __DIR__ . '/config.php';
+require_once __DIR__ . '/config.php';
+$page = '';
 $clients = ['Coca-Cola', 'Mercedes-Benz', 'EU', 'UNDP', 'Nestlé', 'Toyota', 'Schwarzkopf', 'Yamaha', 'Hyundai', 'Kawasaki', 'Aversi', 'Credo', 'Mazda', 'Julius Meinl', 'Adjarabet'];
 $years = (int)date('Y') - $site['founded'];
+$portfolio = require __DIR__ . '/data/portfolio.php';
+$featured = array_slice(array_values(array_filter($portfolio, fn($p) => $p['cat'] === 'websites')), 0, 6);
 require __DIR__ . '/partials/header.php';
 ?>
 <main>
@@ -19,7 +22,7 @@ require __DIR__ . '/partials/header.php';
                     <p class="rotator"><?= e($t['hero_rotate_pre']) ?> <span class="rotator-words" data-words="<?= e(json_encode($t['hero_rotate'], JSON_UNESCAPED_UNICODE)) ?>"><b><?= e($t['hero_rotate'][0]) ?></b></span></p>
                     <p class="lead"><?= e($t['hero_sub']) ?></p>
                     <div class="hero-actions">
-                        <a class="btn btn-accent" href="#contact" data-magnetic><?= e($t['cta']) ?> <span class="arr">→</span></a>
+                        <a class="btn btn-accent" href="<?= e(url('contact')) ?>" data-magnetic><?= e($t['cta']) ?> <span class="arr">→</span></a>
                         <a class="btn btn-ghost" href="#work" data-magnetic><?= e($t['hero_btn2']) ?></a>
                     </div>
                 </div>
@@ -36,7 +39,7 @@ require __DIR__ . '/partials/header.php';
             <div class="marquee-track">
                 <?php for ($i = 0; $i < 2; $i++): ?>
                 <?php foreach ($clients as $c): ?>
-                <span class="marquee-item"><?= e($c) ?></span><span class="marquee-sep" aria-hidden="true">✦</span>
+                <span class="marquee-item"<?= $i ? ' aria-hidden="true"' : '' ?>><?= e($c) ?></span><span class="marquee-sep" aria-hidden="true">✦</span>
                 <?php endforeach; ?>
                 <?php endfor; ?>
             </div>
@@ -59,13 +62,17 @@ require __DIR__ . '/partials/header.php';
     </section>
     <section class="services" id="services">
         <div class="wrap">
-            <div class="section-head">
-                <p class="label reveal">(02) <?= e($t['services_label']) ?></p>
-                <h2 class="h2 reveal"><?= $t['services_title'] ?></h2>
+            <div class="section-head row">
+                <div>
+                    <p class="label reveal">(02) <?= e($t['services_label']) ?></p>
+                    <h2 class="h2 reveal"><?= $t['services_title'] ?></h2>
+                </div>
+                <a class="btn btn-dark reveal" href="<?= e(url('services')) ?>" data-magnetic><?= e($t['services_all']) ?> <span class="arr">→</span></a>
             </div>
             <ul class="service-list">
                 <?php foreach ($t['services'] as $i => $s): ?>
                 <li class="service reveal">
+                    <a class="service-link" href="<?= e(url('services', $s['slug'])) ?>" aria-label="<?= e($s['t']) ?>"></a>
                     <span class="service-num"><?= sprintf('%02d', $i + 1) ?></span>
                     <h3 class="service-title"><?= e($s['t']) ?></h3>
                     <div class="service-body">
@@ -85,18 +92,17 @@ require __DIR__ . '/partials/header.php';
                     <p class="label reveal">(03) <?= e($t['work_label']) ?></p>
                     <h2 class="h2 reveal"><?= $t['work_title'] ?></h2>
                 </div>
-                <a class="btn btn-ghost reveal" href="#" data-magnetic><?= e($t['work_all']) ?> <span class="arr">→</span></a>
+                <a class="btn btn-ghost reveal" href="<?= e(url('portfolio')) ?>" data-magnetic><?= e($t['work_all']) ?> <span class="arr">→</span></a>
             </div>
             <div class="work-grid">
-                <?php foreach ($t['work'] as $i => $w): ?>
-                <a class="work-card reveal v<?= $i + 1 ?>" href="#" data-cursor="<?= e($t['work_view']) ?>">
+                <?php foreach ($featured as $i => $w): ?>
+                <a class="work-card reveal v<?= $i + 1 ?>" href="<?= e(url('portfolio', 'websites')) ?>" data-cursor="<?= e($t['work_view']) ?>">
                     <div class="work-media">
-                        <div class="work-art" aria-hidden="true"><span></span><span></span></div>
-                        <span class="work-initial" aria-hidden="true"><?= e(mb_substr($w['t'], 0, 1)) ?></span>
+                        <img src="<?= e(asset($w['img'])) ?>" alt="<?= e($w['t']) ?>" loading="lazy" width="586" height="346">
                     </div>
                     <div class="work-meta">
                         <h3><?= e($w['t']) ?></h3>
-                        <span><?= e($w['c']) ?></span>
+                        <span><?= e($t['types'][$w['type']]) ?></span>
                     </div>
                 </a>
                 <?php endforeach; ?>
@@ -133,17 +139,6 @@ require __DIR__ . '/partials/header.php';
             </div>
         </div>
     </section>
-    <section class="contact" id="contact">
-        <div class="wrap">
-            <p class="label reveal">(06) <?= e($t['contact_label']) ?></p>
-            <h2 class="contact-title reveal"><?= $t['contact_title'] ?></h2>
-            <p class="lead reveal"><?= e($t['contact_sub']) ?></p>
-            <a class="contact-mail reveal" href="mailto:<?= e($site['email']) ?>" data-magnetic><?= e($site['email']) ?> <span aria-hidden="true">↗</span></a>
-            <div class="contact-row reveal">
-                <a class="btn btn-accent" href="tel:<?= e(str_replace(' ', '', $site['phone'])) ?>" data-magnetic><?= e($site['phone']) ?></a>
-                <a class="btn btn-ghost" href="<?= e($site['social']['Facebook']) ?>" target="_blank" rel="noopener" data-magnetic>Messenger</a>
-            </div>
-        </div>
-    </section>
+    <?php require __DIR__ . '/partials/cta.php'; ?>
 </main>
 <?php require __DIR__ . '/partials/footer.php'; ?>

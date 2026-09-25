@@ -12,7 +12,9 @@
   function onScroll() {
     var y = window.scrollY;
     nav.classList.toggle('is-scrolled', y > 40);
-    nav.classList.toggle('is-hidden', y > lastY && y > 400 && !nav.classList.contains('is-open'));
+    var hide = y > lastY && y > 400 && !nav.classList.contains('is-open');
+    nav.classList.toggle('is-hidden', hide);
+    document.body.classList.toggle('nav-hidden', hide);
     lastY = y;
   }
   window.addEventListener('scroll', onScroll, { passive: true });
@@ -106,6 +108,88 @@
       }, 450);
     }, 2400);
   }
+  // Portfolio filters (supports #websites, #visualidentity, #branding, #facebook)
+  var grid = document.getElementById('pfGrid');
+  if (grid) {
+    var filters = document.querySelectorAll('.pf-filter');
+    var items = Array.prototype.slice.call(grid.querySelectorAll('.pf-item'));
+    var applyFilter = function (key, push) {
+      var found = false;
+      filters.forEach(function (f) {
+        var on = f.getAttribute('data-filter') === key;
+        if (on) found = true;
+        f.classList.toggle('is-active', on);
+        f.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      if (!found) return applyFilter('all', push);
+      items.forEach(function (it) { it.hidden = key !== 'all' && it.getAttribute('data-cat') !== key; });
+      if (push) history.replaceState(null, '', key === 'all' ? location.pathname + location.search : '#' + key);
+    };
+    filters.forEach(function (f) {
+      f.addEventListener('click', function () { applyFilter(f.getAttribute('data-filter'), true); });
+    });
+    if (location.hash) applyFilter(location.hash.slice(1), false);
+    // Lightbox
+    var lb = document.getElementById('lightbox');
+    var lbImg = lb.querySelector('img');
+    var lbTitle = lb.querySelector('figcaption strong');
+    var lbType = lb.querySelector('figcaption span');
+    var current = 0;
+    var lastFocus = null;
+    var visible = function () { return items.filter(function (it) { return !it.hidden; }); };
+    var show = function (it) {
+      current = visible().indexOf(it);
+      var img = it.querySelector('img');
+      lbImg.src = img.getAttribute('src');
+      lbImg.alt = img.alt;
+      lbTitle.textContent = it.querySelector('.pf-title').textContent;
+      lbType.textContent = it.querySelector('.pf-type').textContent;
+    };
+    var open = function (it) {
+      lastFocus = it;
+      show(it);
+      lb.hidden = false;
+      requestAnimationFrame(function () { lb.classList.add('is-open'); });
+      document.body.style.overflow = 'hidden';
+      lb.querySelector('.lb-close').focus();
+    };
+    var close = function () {
+      lb.classList.remove('is-open');
+      document.body.style.overflow = '';
+      setTimeout(function () { lb.hidden = true; }, 300);
+      if (lastFocus) lastFocus.focus();
+    };
+    var step = function (d) {
+      var v = visible();
+      show(v[(current + d + v.length) % v.length]);
+    };
+    items.forEach(function (it) { it.addEventListener('click', function () { open(it); }); });
+    lb.querySelector('.lb-close').addEventListener('click', close);
+    lb.querySelector('.lb-prev').addEventListener('click', function () { step(-1); });
+    lb.querySelector('.lb-next').addEventListener('click', function () { step(1); });
+    lb.addEventListener('click', function (e) { if (e.target === lb) close(); });
+    document.addEventListener('keydown', function (e) {
+      if (lb.hidden) return;
+      if (e.key === 'Escape') close();
+      if (e.key === 'ArrowLeft') step(-1);
+      if (e.key === 'ArrowRight') step(1);
+    });
+  }
+  // Services sub-nav active state
+  var srvLinks = document.querySelectorAll('.srv-index a');
+  if (srvLinks.length && 'IntersectionObserver' in window) {
+    var srvIo = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        srvLinks.forEach(function (a) {
+          var on = a.getAttribute('href') === '#' + e.target.id;
+          a.classList.toggle('is-active', on);
+          if (on && a.scrollIntoView) a.parentNode.scrollTo({ left: a.offsetLeft - 16, behavior: 'smooth' });
+        });
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    document.querySelectorAll('.srv').forEach(function (s) { srvIo.observe(s); });
+  }
   // Custom cursor and magnetic elements
   if (!finePointer || reduce) return;
   var cursor = document.querySelector('.cursor');
@@ -136,7 +220,7 @@
   });
   // Subtle parallax for hero orb
   var orb = document.querySelector('.hero-orb');
-  window.addEventListener('mousemove', function (e) {
+  if (orb) window.addEventListener('mousemove', function (e) {
     var x = (e.clientX / window.innerWidth - 0.5) * 40;
     var y = (e.clientY / window.innerHeight - 0.5) * 40;
     orb.style.translate = x + 'px ' + y + 'px';

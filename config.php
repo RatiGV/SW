@@ -1,10 +1,16 @@
 <?php
+session_start();
 $site = [
-    'name' => 'Smart Web',
+    'name' => 'Smart Agency',
+    'url' => 'https://smartweb.ge',
     'founded' => 2011,
     'phone' => '+995 591 400 011',
     'phone2' => '+995 322 110 105',
     'email' => 'info@smartweb.ge',
+    'mail_to' => 'info@smartweb.ge',
+    'mail_from' => 'noreply@smartweb.ge',
+    'whatsapp' => '995591400011',
+    'map_query' => 'Zedazeni St 2, Tbilisi, Georgia',
     'social' => [
         'Facebook' => 'https://facebook.com/smartweb.ge',
         'Instagram' => 'https://instagram.com/smartweb.ge',
@@ -13,12 +19,9 @@ $site = [
     ],
 ];
 $langs = ['ka', 'en'];
-$lang = $_GET['lang'] ?? ($_COOKIE['lang'] ?? 'ka');
+$lang = $_GET['lang'] ?? 'ka';
 if (!in_array($lang, $langs, true)) {
     $lang = 'ka';
-}
-if (isset($_GET['lang']) && !headers_sent()) {
-    setcookie('lang', $lang, time() + 31536000, '/');
 }
 $t = require __DIR__ . '/lang/' . $lang . '.php';
 function e($s)
@@ -28,5 +31,18 @@ function e($s)
 function asset($path)
 {
     $file = __DIR__ . '/' . $path;
-    return $path . (is_file($file) ? '?v=' . filemtime($file) : '');
+    return '/' . $path . (is_file($file) ? '?v=' . filemtime($file) : '');
+}
+function url($page = '', $anchor = '', $forLang = null, $params = [])
+{
+    global $lang;
+    $l = $forLang ?? $lang;
+    if ($l !== 'ka') {
+        $params = ['lang' => $l] + $params;
+    }
+    return '/' . $page . ($params ? '?' . http_build_query($params) : '') . ($anchor !== '' ? '#' . $anchor : '');
+}
+function tel($phone)
+{
+    return 'tel:' . str_replace(' ', '', $phone);
 }
