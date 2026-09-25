@@ -1,0 +1,11 @@
+# cPanel / server generated
+cgi-bin/
+.user.ini
+php.ini
+.well-known/
+error_log
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
