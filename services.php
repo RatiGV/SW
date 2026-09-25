@@ -23,7 +23,7 @@ require __DIR__ . '/partials/header.php';
             <article class="srv" id="<?= e($s['slug']) ?>">
                 <div class="srv-media reveal">
                     <span class="srv-num" aria-hidden="true"><?= sprintf('%02d', $i + 1) ?></span>
-                    <img src="<?= e(asset('assets/img/services/' . $s['slug'] . '.svg')) ?>" alt="" loading="lazy" width="500" height="400">
+                    <img src="<?= e(asset('assets/img/services/' . $s['slug'] . '.svg')) ?>" alt="" loading="lazy" width="800" height="640">
                 </div>
                 <div class="srv-content">
                     <h2 class="srv-title reveal"><?= e($s['t']) ?></h2>
