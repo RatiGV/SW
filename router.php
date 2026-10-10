@@ -4,6 +4,9 @@ $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 if ($path !== '/' && is_file(__DIR__ . $path)) {
     return false;
 }
+if ($path === '/v2' || strpos($path, '/v2/') === 0) {
+    return require __DIR__ . '/v2/router.php';
+}
 $pages = ['' => 'index.php', 'services' => 'services.php', 'portfolio' => 'portfolio.php', 'pricing' => 'pricing.php', 'contact' => 'contact.php'];
 $slug = trim($path, '/');
 if (isset($pages[$slug])) {

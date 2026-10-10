@@ -10,3 +10,12 @@ Plain PHP (8.x), no build step.
 - Contact form sends with PHP `mail()` to `mail_to` in `config.php`
 
 Local preview: `php -S localhost:8000 router.php`
+
+## Version 2 (3D edition) - `/v2`
+
+Same pages and content as the main site, rebuilt with three.js 3D scenes. Lives in `v2/` and runs at `/v2/`.
+
+- `v2/config.php` - `base` is the URL folder (`/v2/`); portfolio images are shared from the root `assets/img/portfolio/`
+- `v2/assets/js/scenes.js` - all 3D scenes; one WebGL canvas renders every `[data-scene]` element
+- `v2/assets/js/vendor/three.min.js` - three.js r186 (MIT), bundled locally, no CDN
+- Falls back to soft gradients when WebGL is unavailable; holds still when the visitor prefers reduced motion
