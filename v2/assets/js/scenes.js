@@ -7,7 +7,7 @@ const root = document.documentElement;
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const small = matchMedia('(max-width: 900px)').matches || matchMedia('(pointer: coarse)').matches;
 const COLORS = {
-  lime: new THREE.Color('#c8ff3d'),
+  accent: new THREE.Color('#2f8fff'),
   violet: new THREE.Color('#7b5cff'),
   pink: new THREE.Color('#ff5ca8'),
   white: new THREE.Color('#f4f3ee'),
@@ -68,8 +68,8 @@ function initMaterials() {
   MAT.chrome = new THREE.MeshPhysicalMaterial({ color: 0xd9d9e3, metalness: 1, roughness: 0.18, envMapIntensity: 1.2 });
   MAT.dark = new THREE.MeshPhysicalMaterial({ color: 0x14141c, metalness: 0.75, roughness: 0.28, clearcoat: 0.6, envMapIntensity: 1 });
   MAT.white = new THREE.MeshPhysicalMaterial({ color: 0xf4f3ee, metalness: 0, roughness: 0.25, clearcoat: 1, envMapIntensity: 1 });
-  MAT.lime = new THREE.MeshPhysicalMaterial({
-    color: COLORS.lime, emissive: COLORS.lime, emissiveIntensity: 0.45, roughness: 0.25, clearcoat: 1, envMapIntensity: 0.8,
+  MAT.accent = new THREE.MeshPhysicalMaterial({
+    color: COLORS.accent, emissive: COLORS.accent, emissiveIntensity: 0.45, roughness: 0.25, clearcoat: 1, envMapIntensity: 0.8,
   });
   MAT.violet = new THREE.MeshPhysicalMaterial({ color: COLORS.violet, emissive: COLORS.violet, emissiveIntensity: 0.25, roughness: 0.2, clearcoat: 1 });
 }
@@ -155,7 +155,7 @@ function uiTexture(kind) {
       const y = 390 + i * 78;
       g.fillStyle = 'rgba(255,255,255,.07)';
       rr(g, 30, y, W - 60, 64, 16);
-      g.fillStyle = i === 0 ? '#c8ff3d' : 'rgba(255,255,255,.25)';
+      g.fillStyle = i === 0 ? '#2f8fff' : 'rgba(255,255,255,.25)';
       g.beginPath();
       g.arc(62, y + 32, 16, 0, Math.PI * 2);
       g.fill();
@@ -164,7 +164,7 @@ function uiTexture(kind) {
       g.fillStyle = 'rgba(255,255,255,.25)';
       rr(g, 92, y + 38, 90, 8, 4);
     }
-    g.fillStyle = '#c8ff3d';
+    g.fillStyle = '#2f8fff';
     rr(g, 30, H - 110, W - 60, 52, 26);
     g.fillStyle = 'rgba(255,255,255,.5)';
     rr(g, W / 2 - 50, H - 30, 100, 8, 4);
@@ -188,7 +188,7 @@ function uiTexture(kind) {
     g.fillStyle = 'rgba(255,255,255,.28)';
     rr(g, 34, 196, 230, 9, 4);
     rr(g, 34, 214, 190, 9, 4);
-    g.fillStyle = '#c8ff3d';
+    g.fillStyle = '#2f8fff';
     rr(g, 34, 244, 110, 34, 17);
     g.fillStyle = grad;
     rr(g, 330, 110, 270, 170, 16);
@@ -277,7 +277,7 @@ const SCENES = {
     scene.add(group);
     const uniforms = {
       uTime: { value: 0 }, uAmp: { value: 0.26 }, uFreq: { value: 0.95 }, uDim: { value: 1 },
-      uLime: { value: COLORS.lime }, uViolet: { value: COLORS.violet }, uPink: { value: COLORS.pink },
+      uAccent: { value: COLORS.accent }, uViolet: { value: COLORS.violet }, uPink: { value: COLORS.pink },
     };
     const blob = new THREE.Mesh(
       new THREE.IcosahedronGeometry(1.25, small ? 40 : 80),
@@ -310,12 +310,12 @@ const SCENES = {
             gl_Position = projectionMatrix * mv;
           }`,
         fragmentShader: `
-          uniform float uTime; uniform float uDim; uniform vec3 uLime; uniform vec3 uViolet; uniform vec3 uPink;
+          uniform float uTime; uniform float uDim; uniform vec3 uAccent; uniform vec3 uViolet; uniform vec3 uPink;
           varying vec3 vNormal; varying vec3 vView; varying float vNoise;
           vec3 pal(float t){
             t = fract(t);
             vec3 c = mix(uViolet, uPink, smoothstep(0., .4, t));
-            c = mix(c, uLime, smoothstep(.4, .7, t));
+            c = mix(c, uAccent, smoothstep(.4, .7, t));
             return mix(c, uViolet, smoothstep(.7, 1., t));
           }
           void main(){
@@ -329,7 +329,7 @@ const SCENES = {
             vec3 col = vec3(.03, .03, .05) + irid * (.12 + diff * .22);
             col = mix(col, irid * 1.25, fres);
             col += vec3(1.) * spec * .9 + uPink * spec2;
-            col += uLime * pow(fres, 5.) * .5;
+            col += uAccent * pow(fres, 5.) * .5;
             gl_FragColor = vec4(col * uDim, 1.);
             #include <tonemapping_fragment>
             #include <colorspace_fragment>
@@ -346,7 +346,7 @@ const SCENES = {
       const a = Math.random() * Math.PI * 2;
       const r = 2.15 + gauss() * 0.42;
       pos.push(Math.cos(a) * r, gauss() * 0.14, Math.sin(a) * r);
-      const c = pickColor([[COLORS.white, 0.6], [COLORS.lime, 0.2], [COLORS.violet, 0.2]]);
+      const c = pickColor([[COLORS.white, 0.6], [COLORS.accent, 0.2], [COLORS.violet, 0.2]]);
       col.push(c.r, c.g, c.b);
       siz.push(0.6 + Math.random() * 2.2);
     }
@@ -358,7 +358,7 @@ const SCENES = {
     // satellites
     const sats = [
       { mesh: new THREE.Mesh(new THREE.IcosahedronGeometry(0.16, 0), MAT.glassFlat), r: 1.95, s: 0.35, o: 0, y: 0.5 },
-      { mesh: new THREE.Mesh(new THREE.TorusGeometry(0.11, 0.045, 16, 48), MAT.lime), r: 2.35, s: -0.25, o: 2.2, y: -0.4 },
+      { mesh: new THREE.Mesh(new THREE.TorusGeometry(0.11, 0.045, 16, 48), MAT.accent), r: 2.35, s: -0.25, o: 2.2, y: -0.4 },
       { mesh: new THREE.Mesh(new THREE.SphereGeometry(0.09, 32, 16), MAT.chrome), r: 1.7, s: 0.5, o: 4.1, y: -0.1 },
     ];
     sats.forEach((s) => group.add(s.mesh));
@@ -433,7 +433,7 @@ const SCENES = {
     geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
     const uniforms = {
       uTime: { value: 0 }, uMouse: { value: new THREE.Vector2(0, -2) }, uPR: { value: renderer.getPixelRatio() },
-      uLime: { value: COLORS.lime }, uViolet: { value: COLORS.violet },
+      uAccent: { value: COLORS.accent }, uViolet: { value: COLORS.violet },
     };
     const pts = new THREE.Points(geo, new THREE.ShaderMaterial({
       uniforms, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
@@ -455,13 +455,13 @@ const SCENES = {
           gl_Position = projectionMatrix * mv;
         }`,
       fragmentShader: `
-        uniform vec3 uLime; uniform vec3 uViolet;
+        uniform vec3 uAccent; uniform vec3 uViolet;
         varying float vH; varying float vEdge; varying float vRip;
         void main(){
           float d = length(gl_PointCoord - .5);
           float a = smoothstep(.5, .1, d) * vEdge;
           vec3 c = mix(vec3(.55), uViolet, smoothstep(-.2, .5, vH));
-          c = mix(c, uLime, smoothstep(.55, 1.1, vH + vRip * .4));
+          c = mix(c, uAccent, smoothstep(.55, 1.1, vH + vRip * .4));
           gl_FragColor = vec4(c, a * (.5 + smoothstep(-.3, .9, vH) * .5));
           #include <colorspace_fragment>
         }`,
@@ -487,7 +487,7 @@ const SCENES = {
     const rings = [
       new THREE.Mesh(new THREE.TorusGeometry(2.6, 0.03, 16, 160), MAT.chrome),
       new THREE.Mesh(new THREE.TorusGeometry(2.15, 0.055, 24, 160), MAT.glass),
-      new THREE.Mesh(new THREE.TorusGeometry(1.7, 0.018, 16, 160), MAT.lime),
+      new THREE.Mesh(new THREE.TorusGeometry(1.7, 0.018, 16, 160), MAT.accent),
     ];
     rings.forEach((r) => group.add(r));
     const core = new THREE.Mesh(new THREE.IcosahedronGeometry(0.55, 0), MAT.glassFlat);
@@ -499,7 +499,7 @@ const SCENES = {
     for (let i = 0; i < N; i++) {
       const p = new THREE.Vector3().randomDirection().multiplyScalar(3.2 + Math.random() * 1.6);
       pos.push(p.x, p.y, p.z);
-      const c = pickColor([[COLORS.white, 0.7], [COLORS.violet, 0.2], [COLORS.lime, 0.1]]);
+      const c = pickColor([[COLORS.white, 0.7], [COLORS.violet, 0.2], [COLORS.accent, 0.1]]);
       col.push(c.r, c.g, c.b);
       siz.push(0.5 + Math.random() * 1.6);
     }
@@ -568,7 +568,7 @@ const SCENES = {
       const a = Math.random() * Math.PI * 2;
       const r = R + 0.5 + Math.random() * 2.2;
       pos.push(Math.sin(a) * r, (Math.random() - 0.5) * 5, Math.cos(a) * r);
-      const c = pickColor([[COLORS.white, 0.6], [COLORS.lime, 0.2], [COLORS.violet, 0.2]]);
+      const c = pickColor([[COLORS.white, 0.6], [COLORS.accent, 0.2], [COLORS.violet, 0.2]]);
       col.push(c.r, c.g, c.b);
       siz.push(0.6 + Math.random() * 1.5);
     }
@@ -589,20 +589,20 @@ const SCENES = {
     };
   },
 
-  // Pricing hero: four iridescent gems, one per package, the online store in lime
+  // Pricing hero: four iridescent gems, one per package, the online store in the accent blue
   crystal(v) {
     const { scene, camera } = baseView(35, 6.6);
     const group = new THREE.Group();
     scene.add(group);
-    const limeGem = new THREE.MeshPhysicalMaterial({
-      color: COLORS.lime, emissive: COLORS.lime, emissiveIntensity: 0.35, roughness: 0.15, metalness: 0.05,
+    const accentGem = new THREE.MeshPhysicalMaterial({
+      color: COLORS.accent, emissive: COLORS.accent, emissiveIntensity: 0.35, roughness: 0.15, metalness: 0.05,
       clearcoat: 1, clearcoatRoughness: 0.1, iridescence: 0.25, iridescenceThicknessRange: [100, 300], envMapIntensity: 0.6, flatShading: true,
     });
     const defs = [
       { g: new THREE.OctahedronGeometry(0.5, 0), m: MAT.glassFlat, x: -2.3, y: -0.5 },
       { g: new THREE.OctahedronGeometry(0.66, 0), m: MAT.glassFlat, x: -0.8, y: 0.3 },
       { g: new THREE.DodecahedronGeometry(0.66, 0), m: MAT.glassFlat, x: 0.75, y: -0.25 },
-      { g: new THREE.IcosahedronGeometry(0.88, 0), m: limeGem, x: 2.35, y: 0.45 },
+      { g: new THREE.IcosahedronGeometry(0.88, 0), m: accentGem, x: 2.35, y: 0.45 },
     ];
     const gems = defs.map((d, i) => {
       const mesh = new THREE.Mesh(d.g, d.m);
@@ -616,7 +616,7 @@ const SCENES = {
     const siz = [];
     for (let i = 0; i < 400; i++) {
       pos.push((Math.random() - 0.5) * 8, (Math.random() - 0.5) * 4, (Math.random() - 0.5) * 3);
-      const c = pickColor([[COLORS.white, 0.6], [COLORS.lime, 0.25], [COLORS.violet, 0.15]]);
+      const c = pickColor([[COLORS.white, 0.6], [COLORS.accent, 0.25], [COLORS.violet, 0.15]]);
       col.push(c.r, c.g, c.b);
       siz.push(0.4 + Math.random() * 1.4);
     }
@@ -639,7 +639,7 @@ const SCENES = {
     };
   },
 
-  // Contact hero: dotted globe with Tbilisi highlighted and arcs to cities we work with
+  // Contact hero: dotted globe with Tbilisi highlighted in blue and arcs to cities we work with
   globe(v) {
     const { scene, camera } = baseView(35, 7);
     const group = new THREE.Group();
@@ -670,10 +670,10 @@ const SCENES = {
     const home = { lat: 41.7151, lon: 44.8271 };
     const cities = [[51.5, -0.12], [40.71, -74.0], [25.2, 55.27], [52.52, 13.4], [41.0, 28.98], [48.85, 2.35], [50.45, 30.52], [35.68, 139.7]];
     const homeV = toVec(home.lat, home.lon);
-    const marker = new THREE.Mesh(new THREE.SphereGeometry(0.045, 24, 12), MAT.lime);
+    const marker = new THREE.Mesh(new THREE.SphereGeometry(0.045, 24, 12), MAT.accent);
     marker.position.copy(homeV);
     spin.add(marker);
-    const pulse = new THREE.Mesh(new THREE.RingGeometry(0.06, 0.08, 48), new THREE.MeshBasicMaterial({ color: COLORS.lime, transparent: true, side: THREE.DoubleSide }));
+    const pulse = new THREE.Mesh(new THREE.RingGeometry(0.06, 0.08, 48), new THREE.MeshBasicMaterial({ color: COLORS.accent, transparent: true, side: THREE.DoubleSide }));
     pulse.position.copy(homeV.clone().multiplyScalar(1.002));
     pulse.lookAt(homeV.clone().multiplyScalar(2));
     spin.add(pulse);
@@ -688,7 +688,7 @@ const SCENES = {
         new THREE.LineBasicMaterial({ color: i % 2 ? COLORS.violet : COLORS.white, transparent: true, opacity: 0.45 }),
       );
       spin.add(line);
-      const dot = new THREE.Mesh(new THREE.SphereGeometry(0.028, 12, 8), MAT.lime);
+      const dot = new THREE.Mesh(new THREE.SphereGeometry(0.028, 12, 8), MAT.accent);
       spin.add(dot);
       const city = new THREE.Mesh(new THREE.SphereGeometry(0.022, 12, 8), MAT.white);
       city.position.copy(end);
@@ -732,7 +732,7 @@ const SCENES = {
         const x = (i - (cols - 1) / 2) * gap;
         const y = (j - (rows - 1) / 2) * gap;
         const r = Math.random();
-        if (r < 0.07) color.copy(COLORS.lime);
+        if (r < 0.07) color.copy(COLORS.accent);
         else if (r < 0.14) color.copy(COLORS.violet);
         else color.setRGB(0.16, 0.16, 0.2);
         mesh.setColorAt(k, color);
@@ -779,7 +779,7 @@ const SCENES = {
       const center = a.clone().add(b).add(c).divideScalar(3);
       const g = new THREE.BufferGeometry().setFromPoints([a.sub(center), b.sub(center), c.sub(center)]);
       g.computeVertexNormals();
-      const m = new THREE.Mesh(g, Math.random() < 0.12 ? MAT.lime : MAT.glassFlat);
+      const m = new THREE.Mesh(g, Math.random() < 0.12 ? MAT.accent : MAT.glassFlat);
       m.userData = { c: center, k: 0.5 + Math.random() * 1.4, axis: new THREE.Vector3().randomDirection(), s: Math.random() * 3 };
       group.add(m);
       shards.push(m);
@@ -821,7 +821,7 @@ const SERVICE_OBJECTS = {
       group.add(p);
       return p;
     });
-    const btn = new THREE.Mesh(slab(0.44, 0.15, 0.07, 0.05), MAT.lime);
+    const btn = new THREE.Mesh(slab(0.44, 0.15, 0.07, 0.05), MAT.accent);
     group.add(btn);
     return (t) => {
       const sep = 0.5 + Math.sin(t * 0.9) * 0.12;
@@ -841,7 +841,7 @@ const SERVICE_OBJECTS = {
     group.add(phone);
     const note = new THREE.Group();
     note.add(new THREE.Mesh(slab(1.0, 0.3, 0.1, 0.04), MAT.glass));
-    const dot = new THREE.Mesh(new THREE.SphereGeometry(0.07, 24, 12), MAT.lime);
+    const dot = new THREE.Mesh(new THREE.SphereGeometry(0.07, 24, 12), MAT.accent);
     dot.position.set(-0.36, 0, 0.05);
     note.add(dot);
     group.add(note);
@@ -855,7 +855,7 @@ const SERVICE_OBJECTS = {
   // Brand shapes: torus, sphere, cone and cube in a slow composition
   branding(group) {
     const torus = new THREE.Mesh(new THREE.TorusGeometry(0.62, 0.24, 48, 120), MAT.glass);
-    const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.3, 48, 24), MAT.lime);
+    const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.3, 48, 24), MAT.accent);
     const cone = new THREE.Mesh(new THREE.ConeGeometry(0.3, 0.6, 48), MAT.white);
     const cube = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.34, 0.34), MAT.chrome);
     group.add(torus, sphere, cone, cube);
@@ -896,11 +896,11 @@ const SERVICE_OBJECTS = {
       pts.push(a, center);
     });
     net.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.18 })));
-    const hub = new THREE.Mesh(new THREE.SphereGeometry(0.22, 48, 24), MAT.lime);
+    const hub = new THREE.Mesh(new THREE.SphereGeometry(0.22, 48, 24), MAT.accent);
     net.add(hub);
     const point = (idx) => (idx < 0 ? center : nodes[idx]);
     const pulses = Array.from({ length: 7 }, (_, i) => {
-      const m = new THREE.Mesh(new THREE.SphereGeometry(0.04, 12, 8), MAT.lime);
+      const m = new THREE.Mesh(new THREE.SphereGeometry(0.04, 12, 8), MAT.accent);
       net.add(m);
       return { m, e: edges[(i * 5) % edges.length], k: Math.random() };
     });
@@ -918,7 +918,7 @@ const SERVICE_OBJECTS = {
       });
     };
   },
-  // Camera lens with rotating rings and a lime focus ring
+  // Camera lens with rotating rings and a accent focus ring
   'photo-video'(group) {
     const lens = new THREE.Group();
     const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.95, 1.0, 0.9, 72, 1, true), MAT.dark);
@@ -929,7 +929,7 @@ const SERVICE_OBJECTS = {
     front.position.z = 0.45;
     const inner = new THREE.Mesh(new THREE.TorusGeometry(0.8, 0.025, 16, 96), MAT.chrome);
     inner.position.z = 0.4;
-    const focus = new THREE.Mesh(new THREE.TorusGeometry(0.88, 0.018, 16, 96), MAT.lime);
+    const focus = new THREE.Mesh(new THREE.TorusGeometry(0.88, 0.018, 16, 96), MAT.accent);
     focus.position.z = 0.47;
     const glass = new THREE.Mesh(new THREE.SphereGeometry(0.8, 64, 32, 0, Math.PI * 2, 0, 0.62), MAT.glass);
     glass.rotation.x = Math.PI / 2;
@@ -954,7 +954,7 @@ const SERVICE_OBJECTS = {
       blades.rotation.z = -spin * 0.5;
     };
   },
-  // 3D bar chart growing in a wave, tallest bar in lime
+  // 3D bar chart growing in a wave, tallest bar in accent
   seo(group, camera) {
     camera.position.set(3.4, 2.7, 4.6);
     camera.lookAt(0, -0.1, 0);
@@ -978,7 +978,7 @@ const SERVICE_OBJECTS = {
           dummy.scale.set(1, h, 1);
           dummy.updateMatrix();
           bars.setMatrixAt(k, dummy.matrix);
-          if (i === n - 1 && j === n - 1) col.copy(COLORS.lime);
+          if (i === n - 1 && j === n - 1) col.copy(COLORS.accent);
           else col.setRGB(0.22, 0.22, 0.28).lerp(COLORS.violet, grow * 0.7);
           bars.setColorAt(k, col);
           k++;
@@ -1017,7 +1017,7 @@ const SERVICE_OBJECTS = {
     const wire = new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.28 }));
     group.add(wire);
     const lights = fibSphere(9, R * 1.01).map((p, i) => {
-      const m = new THREE.Mesh(new THREE.SphereGeometry(0.035, 12, 8), MAT.lime.clone());
+      const m = new THREE.Mesh(new THREE.SphereGeometry(0.035, 12, 8), MAT.accent.clone());
       m.position.copy(p);
       m.userData.ph = i;
       wire.add(m);
@@ -1027,7 +1027,7 @@ const SERVICE_OBJECTS = {
     orbitA.rotation.set(1.25, 0.35, 0);
     const orbitB = new THREE.Mesh(new THREE.TorusGeometry(1.25, 0.006, 8, 160), MAT.violet);
     orbitB.rotation.set(1.9, -0.5, 0);
-    const satA = new THREE.Mesh(new THREE.SphereGeometry(0.075, 24, 12), MAT.lime);
+    const satA = new THREE.Mesh(new THREE.SphereGeometry(0.075, 24, 12), MAT.accent);
     const satB = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 0.1), MAT.chrome);
     orbitA.add(satA);
     orbitB.add(satB);
