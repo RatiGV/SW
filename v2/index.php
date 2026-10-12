@@ -14,8 +14,8 @@ require __DIR__ . '/partials/header.php';
             <p class="eyebrow reveal"><span class="dot"></span><?= e($t['hero_eyebrow']) ?></p>
             <h1 class="hero-title">
                 <span class="line"><span class="split"><?= e($t['v2_hero'][0]) ?></span></span>
-                <span class="line"><span class="split outline"><?= e($t['v2_hero'][1]) ?></span></span>
-                <span class="line"><span class="split"><?= e($t['v2_hero'][2]) ?></span><span class="hero-star" aria-hidden="true">✦</span></span>
+                <span class="line"><span class="split outline"><?= e($t['v2_hero'][1]) ?></span><span class="hero-star" aria-hidden="true">✦</span></span>
+                <span class="line"><span class="split"><?= e($t['v2_hero'][2]) ?></span></span>
             </h1>
             <div class="hero-bottom">
                 <div class="hero-copy reveal">
