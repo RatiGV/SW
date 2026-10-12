@@ -70,12 +70,12 @@ main, .footer { position: relative; z-index: 1; }
 .cursor {
   position: fixed; top: 0; left: 0; z-index: 200; pointer-events: none;
   width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%;
-  background: var(--accent); mix-blend-mode: difference;
+  background: var(--accent); box-shadow: 0 0 0 2px rgba(255, 255, 255, .55);
   transition: width .3s var(--ease), height .3s var(--ease), margin .3s var(--ease), background .3s;
   display: grid; place-items: center; opacity: 0;
 }
 .cursor span { font: 600 12px/1 var(--font-body); color: var(--accent-ink); opacity: 0; transition: opacity .2s; white-space: nowrap; }
-.cursor.is-hover { width: 56px; height: 56px; margin: -28px 0 0 -28px; }
+.cursor.is-hover { width: 56px; height: 56px; margin: -28px 0 0 -28px; background: rgba(47, 143, 255, .18); box-shadow: 0 0 0 1.5px var(--accent); }
 .cursor.is-label { width: 96px; height: 96px; margin: -48px 0 0 -48px; mix-blend-mode: normal; }
 .cursor.is-label span { opacity: 1; }
 @media (hover: hover) and (pointer: fine) { .cursor { opacity: 1; } }

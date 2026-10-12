@@ -17,6 +17,6 @@
 <rect x="117.0" y="-38.0" width="566" height="716" rx="114" stroke="#fff" fill="none" stroke-opacity="0.12"><animate attributeName="stroke-opacity" dur="3.6s" begin="1.76s" repeatCount="indefinite" keyTimes="0;.15;.5;1" values="0.12;0.57;0.12;0.12"/></rect>
 <rect x="375" y="186" width="50" height="6" rx="3" fill="#fff" fill-opacity=".4"/>
 <circle cx="400" cy="320" r="42" stroke="#fff" fill="none" stroke-opacity=".2"/>
-<circle cx="400" cy="320" r="42" fill="none" stroke="#c8ff3d" stroke-width="3" stroke-linecap="round" stroke-dasharray="263.9" stroke-dashoffset="263.9" transform="rotate(-90 400 320)"><animate attributeName="stroke-dashoffset" dur="3.6s" repeatCount="indefinite" keyTimes="0;.7;.85;1" values="263.9;0;0;263.9" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1"/></circle>
-<circle cx="400" cy="320" r="5" fill="#c8ff3d"><animate attributeName="r" dur="3.6s" repeatCount="indefinite" keyTimes="0;.7;.76;.85;1" values="0;0;8;5;0"/></circle>
+<circle cx="400" cy="320" r="42" fill="none" stroke="#2f8fff" stroke-width="3" stroke-linecap="round" stroke-dasharray="263.9" stroke-dashoffset="263.9" transform="rotate(-90 400 320)"><animate attributeName="stroke-dashoffset" dur="3.6s" repeatCount="indefinite" keyTimes="0;.7;.85;1" values="263.9;0;0;263.9" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1"/></circle>
+<circle cx="400" cy="320" r="5" fill="#2f8fff"><animate attributeName="r" dur="3.6s" repeatCount="indefinite" keyTimes="0;.7;.76;.85;1" values="0;0;8;5;0"/></circle>
 </svg>
